@@ -5,17 +5,28 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-<!--<div th:if="${param.error}">-->
-<!--    Invalid username and password.-->
-<!--</div>-->
-<!--<div th:if="${param.logout}">-->
-<!--    You have been logged out.-->
-<!--</div>-->
-<!--<form th:action="@{/login}" method="post">-->
-<!--    <div><label> User Name : <input type="text" name="username"/> </label></div>-->
-<!--    <div><label> Password: <input type="password" name="password"/> </label></div>-->
-<!--    <div><input type="submit" value="Sign In"/></div>-->
-<!--    <div><input type="submit" value="Register"></div>-->
-<!--</form>-->
+<div th:if="${param.error}">
+    Invalid username and password.
+</div>
+<div th:if="${param.logout}">
+    You have been logged out.
+</div>
+<form th:action="@{/login}" method="post">
+    <div><label> User Name : <input type="text" name="username" value="login"/> </label></div>
+    <div><label> Password: <input type="password" name="password" value="pass"/> </label></div>
+    <div><input type="submit" value="Sign In"/></div>
+    <div id="passReset">
+        <p>
+        If you forgot your password, you can reset it <a href="/user/reset">here</a> .
+        </p>
+    </div>
+    <div id="register">
+        <p>
+            If you haven't got an account, you can <a href="register.html">register</a> here.
+        </p>
+    </div>
+    
+</form>
+
 </body>
 </html>

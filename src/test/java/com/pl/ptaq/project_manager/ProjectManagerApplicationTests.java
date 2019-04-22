@@ -1,4 +1,4 @@
-package com.pl.ptaq.projectManager;
+package com.pl.ptaq.project_manager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
