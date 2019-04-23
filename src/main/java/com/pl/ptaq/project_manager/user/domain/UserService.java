@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class UserService implements UserFacadeInterface {
 
 
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     public UserService(UserRepository repository) {

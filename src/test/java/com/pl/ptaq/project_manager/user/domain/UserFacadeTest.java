@@ -14,13 +14,16 @@ import static org.junit.Assert.assertTrue;
 public class UserFacadeTest {
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     UserService userService;
 //    @Autowired
 //    UserFacade userService;
 
     @Before
     public void setUp(){
-
+        userService = new UserService(userRepository);
     }
 
     @Test
