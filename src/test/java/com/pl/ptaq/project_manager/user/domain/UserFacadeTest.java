@@ -13,8 +13,8 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringRunner.class)
 public class UserFacadeTest {
 
-    @Autowired
-    UserRepository userRepository;
+//    @Autowired
+//    UserRepository userRepository;
 
     @Autowired
     UserService userService;
@@ -23,7 +23,6 @@ public class UserFacadeTest {
 
     @Before
     public void setUp(){
-        userService = new UserService(userRepository);
     }
 
     @Test

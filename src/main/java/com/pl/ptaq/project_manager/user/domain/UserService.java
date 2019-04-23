@@ -1,18 +1,22 @@
 package com.pl.ptaq.project_manager.user.domain;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Getter
+@Setter
 @Service
 public class UserService implements UserFacadeInterface {
 
-
+    @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    public UserService(UserRepository repository) {
-        userRepository = repository;
-    }
+//    @Autowired
+//    public UserService(UserRepository repository) {
+//        userRepository = repository;
+//    }
 
     @Override
     public boolean addUser(String login, String password, String email, String nick) {
