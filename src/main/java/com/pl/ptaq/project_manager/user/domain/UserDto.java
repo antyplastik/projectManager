@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Builder
 @Table(name = "Users")
-class User {
+public class UserDto {
 
     @NotNull
     private String login;

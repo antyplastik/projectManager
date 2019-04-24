@@ -33,7 +33,7 @@ public class UserService implements UserFacade {
     }
 
     @Override
-    public User findUser(String login) {
+    public UserDto findUser(String login) {
         return UserMapper.map(findUserEntity(login));
     }
 

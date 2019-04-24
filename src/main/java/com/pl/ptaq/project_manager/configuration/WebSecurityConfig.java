@@ -33,7 +33,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //    @Override
 //    public UserDetailsService userDetailsService() {
 //        UserDetails user =
-//                User
+//                UserDto
 //                        .withDefaultPasswordEncoder()
 //                        .username("user")
 //                        .password("password")

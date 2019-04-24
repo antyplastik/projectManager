@@ -28,12 +28,13 @@ class ProjectEntity {
     @NotNull
     private String projectName;
 
+    @NotNull
     private String teamId;
 
     @NotNull
     private String projectDescription;
 
     @NotNull
-    private String adminId;
+    private String adminLogin;
 
 }
