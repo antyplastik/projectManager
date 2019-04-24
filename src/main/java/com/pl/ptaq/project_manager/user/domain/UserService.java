@@ -1,36 +1,31 @@
 package com.pl.ptaq.project_manager.user.domain;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Getter
-@Setter
 @Service
-public class UserService implements UserFacadeInterface {
+public class UserService implements UserFacade {
+
+    private final UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-//    @Autowired
-//    public UserService(UserRepository repository) {
-//        userRepository = repository;
-//    }
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public boolean addUser(String login, String password, String email, String nick) {
+        UserEntity user = null;
         if (!isUserExist(login)) {
-            UserEntity user = new UserEntity().builder()
+            user = new UserEntity().builder()
                     .login(login)
                     .password(password)
                     .email(email)
                     .nick(nick)
                     .build();
             userRepository.save(user);
-            return true;
-        } else
-            return false;
+        }
+        return isUserExist(user.getLogin());
     }
 
     public UserEntity findUserEntity(String login) {

@@ -13,16 +13,22 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringRunner.class)
 public class UserFacadeTest {
 
-//    @Autowired
-//    UserRepository userRepository;
-
     @Autowired
-    UserService userService;
-//    @Autowired
-//    UserFacade userService;
+    UserRepository userRepository;
+
+    private UserFacade userService;
+    private User user;
 
     @Before
     public void setUp(){
+        userService = new UserService(userRepository);
+
+        String login = "testUser";
+        String password = "testtest";
+        String email = "test@test.com";
+        String nick = "testtest";
+
+        String[] testUser = new String[] {login,password,email,nick};
     }
 
     @Test

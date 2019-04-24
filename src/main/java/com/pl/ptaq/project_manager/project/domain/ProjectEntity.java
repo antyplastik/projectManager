@@ -1,4 +1,4 @@
-package com.pl.ptaq.project_manager.user.domain;
+package com.pl.ptaq.project_manager.project.domain;
 
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
@@ -17,25 +16,24 @@ import java.util.UUID;
 @Getter
 @Builder
 @Data
-@Table(name = "Users")
+@Table(name = "Projects")
 @Entity
-class UserEntity {
+class ProjectEntity {
 
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
-    private UUID id;
+    private UUID projectId;
 
     @NotNull
-    private String login;
+    private String projectName;
+
+    private String teamId;
 
     @NotNull
-    private String password;
-
-    @Email
-    private String email;
+    private String projectDescription;
 
     @NotNull
-    private String nick;
+    private String adminId;
 
 }
