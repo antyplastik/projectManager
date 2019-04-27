@@ -26,6 +26,9 @@ class ProjectEntity {
     private UUID projectId;
 
     @NotNull
+    private String projectCode;
+
+    @NotNull
     private String projectName;
 
     @NotNull

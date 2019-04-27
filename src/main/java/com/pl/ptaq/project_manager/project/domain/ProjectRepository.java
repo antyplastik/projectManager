@@ -11,11 +11,15 @@ interface ProjectRepository extends PagingAndSortingRepository<ProjectEntity, UU
 
     ProjectEntity findByPAndProjectId (UUID uuid);
 
+    ProjectEntity findByProjectCode (String projectCode);
+
     ProjectEntity findByProjectName (String projectName);
 
     List<ProjectEntity> findAllByTeamId (String teamId);
 
     List<ProjectEntity> findAllByAdminLogin (String adminId);
+
+    List<ProjectEntity> findAllByProjectNameLike(String projectName);
 
     List<ProjectEntity> findAllByProjectDescriptionLike(String description);
 

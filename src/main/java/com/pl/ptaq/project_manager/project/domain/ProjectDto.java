@@ -12,6 +12,9 @@ import javax.validation.constraints.NotNull;
 public class ProjectDto {
 
     @NotNull
+    private String projectCode;
+
+    @NotNull
     private String projectName;
 
     @NotNull

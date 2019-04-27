@@ -6,16 +6,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService implements UserFacade {
 
-    private final UserRepository userRepository;
+    private final UserRepository repository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserService(UserRepository repository) {
+        this.repository = repository;
     }
 
     @Override
     public boolean addUser(String login, String password, String email, String nick) {
-        UserEntity user = null;
+        UserEntity user;
         if (!isUserExist(login)) {
             user = new UserEntity().builder()
                     .login(login)
@@ -23,13 +23,16 @@ public class UserService implements UserFacade {
                     .email(email)
                     .nick(nick)
                     .build();
-            userRepository.save(user);
+
+            repository.save(user);
+
+            return isUserExist(user.getLogin());
         }
-        return isUserExist(user.getLogin());
+        return false;
     }
 
-    public UserEntity findUserEntity(String login) {
-        return userRepository.findByLogin(login);
+    private UserEntity findUserEntity(String login) {
+        return repository.findByLogin(login);
     }
 
     @Override
@@ -51,7 +54,7 @@ public class UserService implements UserFacade {
             modified.setEmail(email);
             modified.setNick(nick);
 
-            userRepository.save(modified);
+            repository.save(modified);
             return modified.hashCode() != found.hashCode();
         }
         return false;
@@ -59,6 +62,11 @@ public class UserService implements UserFacade {
 
     @Override
     public boolean deleteUser(String login) {
+        UserEntity found = findUserEntity(login);
+        if (found != null) {
+            repository.delete(found);
+            return !isUserExist(found.getLogin());
+        }
         return false;
     }
 }
