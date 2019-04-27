@@ -1,6 +1,6 @@
 package com.pl.ptaq.project_manager.user.domain;
 
-public interface UserFacade {
+public interface UserCrudFacade {
 
     boolean addUser(String login, String password, String email, String nick);
 

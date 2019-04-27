@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ProjectService implements ProjectFacade {
+public class ProjectCrudService implements ProjectCrudFacade {
 
     private final ProjectRepository repository;
 
     @Autowired
-    public ProjectService(ProjectRepository repository) {
+    public ProjectCrudService(ProjectRepository repository) {
         this.repository = repository;
     }
 

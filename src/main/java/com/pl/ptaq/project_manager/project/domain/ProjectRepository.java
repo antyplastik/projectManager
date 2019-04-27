@@ -9,7 +9,7 @@ import java.util.UUID;
 @Repository
 interface ProjectRepository extends PagingAndSortingRepository<ProjectEntity, UUID> {
 
-    ProjectEntity findByPAndProjectId (UUID uuid);
+    ProjectEntity findByAndProjectId (UUID uuid);
 
     ProjectEntity findByProjectCode (String projectCode);
 

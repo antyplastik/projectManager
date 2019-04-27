@@ -3,26 +3,32 @@ package com.pl.ptaq.project_manager.user.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
-public class UserService implements UserFacade {
+public class UserCrudService implements UserCrudFacade {
 
     private final UserRepository repository;
 
     @Autowired
-    public UserService(UserRepository repository) {
+    public UserCrudService(UserRepository repository) {
         this.repository = repository;
+    }
+
+    private UserEntity createOrModifyUserEntity(String login, String password, String email, String nick) {
+        return new UserEntity().builder()
+                .login(login)
+                .password(password)
+                .email(email)
+                .nick(nick)
+                .build();
     }
 
     @Override
     public boolean addUser(String login, String password, String email, String nick) {
         UserEntity user;
         if (!isUserExist(login)) {
-            user = new UserEntity().builder()
-                    .login(login)
-                    .password(password)
-                    .email(email)
-                    .nick(nick)
-                    .build();
+            user = createOrModifyUserEntity(login, password, email, nick);
 
             repository.save(user);
 
@@ -48,11 +54,13 @@ public class UserService implements UserFacade {
     @Override
     public boolean updateUser(String login, String password, String email, String nick) {
         UserEntity found = findUserEntity(login);
-        UserEntity modified = found;
         if (found != null) {
-            modified.setPassword(password);
-            modified.setEmail(email);
-            modified.setNick(nick);
+            UserEntity modified = createOrModifyUserEntity(
+                    found.getLogin(),
+                    found.getPassword(),
+                    found.getEmail(),
+                    found.getNick()
+            );
 
             repository.save(modified);
             return modified.hashCode() != found.hashCode();
