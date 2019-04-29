@@ -94,12 +94,15 @@ public class ProjectCrudService implements ProjectCrudFacade {
     @Override
     public boolean updateProject(String projectCode, String projectName, String teamId, String projectDescription, String adminLogin) {
         ProjectEntity found = findProjectEntity(projectCode, projectName);
-        ProjectEntity modified = found;
+
         if (found != null) {
+            ProjectEntity modified = new ProjectEntity();
+            modified.setProjectId(found.getProjectId());
+
             if (projectCode != null)
                 modified.setProjectCode(projectCode);
             if (projectName != null)
-                modified.setProjectCode(projectCode);
+                modified.setProjectName(projectName);
             if (teamId != null)
                 modified.setTeamId(teamId);
             if (projectDescription != null)
@@ -107,10 +110,11 @@ public class ProjectCrudService implements ProjectCrudFacade {
             if (adminLogin != null)
                 modified.setAdminLogin(adminLogin);
 
-            repository.save(modified);
-            return modified.hashCode() != found.hashCode();
+            if  (modified.hashCode() != found.hashCode()){
+                repository.save(modified);
+                return true;
+            }
         }
-
         return false;
     }
 

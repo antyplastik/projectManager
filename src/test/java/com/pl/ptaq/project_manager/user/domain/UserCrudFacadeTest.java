@@ -1,7 +1,6 @@
 package com.pl.ptaq.project_manager.user.domain;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ public class UserCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_add_new_user_and_user_exist_THEN_true() {
+    public void WHEN_add_new_user_and_after_add_user_exist_THEN_true() {
         assertTrue(userService.addUser(
                 userDto.getLogin(),
                 userDto.getPassword(),
@@ -61,7 +60,7 @@ public class UserCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_find_exist_user_THEN_return_user() {
+    public void WHEN_found_exist_user_THEN_return_user() {
         userRepository.save(UserMapper.map(userDto));
         assertNotNull(userService.findUser(userDto.getLogin()));
     }

@@ -62,8 +62,10 @@ public class UserCrudService implements UserCrudFacade {
                     found.getNick()
             );
 
-            repository.save(modified);
-            return modified.hashCode() != found.hashCode();
+            if (modified.hashCode() != found.hashCode()){
+                repository.save(modified);
+                return true;
+            }
         }
         return false;
     }
