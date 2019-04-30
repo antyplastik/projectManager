@@ -3,8 +3,6 @@ package com.pl.ptaq.project_manager.user.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 public class UserCrudService implements UserCrudFacade {
 
@@ -17,10 +15,10 @@ public class UserCrudService implements UserCrudFacade {
 
     private UserEntity createOrModifyUserEntity(String login, String password, String email, String nick) {
         return new UserEntity().builder()
-                .login(login)
-                .password(password)
-                .email(email)
-                .nick(nick)
+                .userLogin(login)
+                .userPassword(password)
+                .userEmail(email)
+                .userNick(nick)
                 .build();
     }
 
@@ -32,13 +30,13 @@ public class UserCrudService implements UserCrudFacade {
 
             repository.save(user);
 
-            return isUserExist(user.getLogin());
+            return isUserExist(user.getUserLogin());
         }
         return false;
     }
 
     private UserEntity findUserEntity(String login) {
-        return repository.findByLogin(login);
+        return repository.findByUserLogin(login);
     }
 
     @Override
@@ -56,10 +54,10 @@ public class UserCrudService implements UserCrudFacade {
         UserEntity found = findUserEntity(login);
         if (found != null) {
             UserEntity modified = createOrModifyUserEntity(
-                    found.getLogin(),
-                    found.getPassword(),
-                    found.getEmail(),
-                    found.getNick()
+                    found.getUserLogin(),
+                    found.getUserPassword(),
+                    found.getUserEmail(),
+                    found.getUserNick()
             );
 
             if (modified.hashCode() != found.hashCode()){
@@ -75,8 +73,16 @@ public class UserCrudService implements UserCrudFacade {
         UserEntity found = findUserEntity(login);
         if (found != null) {
             repository.delete(found);
-            return !isUserExist(found.getLogin());
+            return !isUserExist(found.getUserLogin());
         }
         return false;
+    }
+
+    public static UserEntity map(UserDto dto) {
+        return UserMapper.map(dto);
+    }
+
+    public static UserDto map (UserEntity entity){
+        return UserMapper.map(entity);
     }
 }

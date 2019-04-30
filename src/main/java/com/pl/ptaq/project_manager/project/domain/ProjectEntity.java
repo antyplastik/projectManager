@@ -1,5 +1,6 @@
 package com.pl.ptaq.project_manager.project.domain;
 
+import com.pl.ptaq.project_manager.user.domain.UserDto;
 import com.pl.ptaq.project_manager.user.domain.UserEntity;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -8,15 +9,15 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Getter
 @Builder
 @Data
 @Table(name = "Projects")
 @Entity
-public class ProjectEntity {
+class ProjectEntity {
 
     @Id
     @GeneratedValue(generator = "uuid")

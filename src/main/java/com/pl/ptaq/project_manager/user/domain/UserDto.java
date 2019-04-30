@@ -10,8 +10,8 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Setter
 @Getter
+@Data
 @Builder
-@Table(name = "Users")
 public class UserDto {
 
     @NotNull

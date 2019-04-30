@@ -5,10 +5,10 @@ class UserMapper {
     public static UserDto map(UserEntity entity) {
         if (entity != null)
         return new UserDto().builder()
-                .login(entity.getLogin())
-                .password(entity.getPassword())
-                .email(entity.getEmail())
-                .nick(entity.getNick())
+                .login(entity.getUserLogin())
+                .password(entity.getUserPassword())
+                .email(entity.getUserEmail())
+                .nick(entity.getUserNick())
                 .build();
         else
             return null;
@@ -17,10 +17,10 @@ class UserMapper {
     public static UserEntity map(UserDto userDto) {
         if (userDto != null)
         return new UserEntity().builder()
-                .login(userDto.getLogin())
-                .password(userDto.getPassword())
-                .email(userDto.getEmail())
-                .nick(userDto.getNick())
+                .userLogin(userDto.getLogin())
+                .userPassword(userDto.getPassword())
+                .userEmail(userDto.getEmail())
+                .userNick(userDto.getNick())
                 .build();
         else
             return null;

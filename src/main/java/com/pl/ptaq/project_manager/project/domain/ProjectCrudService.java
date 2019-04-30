@@ -1,5 +1,7 @@
 package com.pl.ptaq.project_manager.project.domain;
 
+import com.pl.ptaq.project_manager.user.domain.UserCrudService;
+import com.pl.ptaq.project_manager.user.domain.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +19,7 @@ public class ProjectCrudService implements ProjectCrudFacade {
     }
 
     @Override
-    public boolean addProject(String projectCode, String projectName, String teamId, String projectDescription, String adminLogin) {
+    public boolean addProject(String projectCode, String projectName, String teamId, String projectDescription, UserDto adminLogin) {
         ProjectEntity project;
         if (!isProjectExist(projectCode, projectName)) {
             project = new ProjectEntity().builder()
@@ -25,7 +27,7 @@ public class ProjectCrudService implements ProjectCrudFacade {
                     .projectName(projectName)
                     .teamId(teamId)
                     .projectDescription(projectDescription)
-                    .adminLogin(adminLogin)
+                    .adminLogin(UserCrudService.map(adminLogin))
                     .build();
 
             repository.save(project);
@@ -92,7 +94,7 @@ public class ProjectCrudService implements ProjectCrudFacade {
     }
 
     @Override
-    public boolean updateProject(String projectCode, String projectName, String teamId, String projectDescription, String adminLogin) {
+    public boolean updateProject(String projectCode, String projectName, String teamId, String projectDescription, UserDto adminLogin) {
         ProjectEntity found = findProjectEntity(projectCode, projectName);
 
         if (found != null) {
@@ -108,7 +110,7 @@ public class ProjectCrudService implements ProjectCrudFacade {
             if (projectDescription != null)
                 modified.setProjectDescription(projectDescription);
             if (adminLogin != null)
-                modified.setAdminLogin(adminLogin);
+                modified.setAdminLogin(UserCrudService.map(adminLogin));
 
             if  (modified.hashCode() != found.hashCode()){
                 repository.save(modified);
@@ -126,5 +128,15 @@ public class ProjectCrudService implements ProjectCrudFacade {
             return !isProjectExist(found.getProjectCode(), found.getProjectName());
         }
         return false;
+    }
+
+
+    public ProjectDto map(ProjectEntity entity) {
+        return ProjectMapper.map(entity);
+    }
+
+
+    public ProjectEntity map(ProjectDto dto) {
+        return ProjectMapper.map(dto);
     }
 }

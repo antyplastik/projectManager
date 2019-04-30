@@ -12,4 +12,12 @@ public interface UserCrudFacade {
 
     boolean deleteUser(String login);
 
+    static UserEntity map(UserDto dto) {
+        return null;
+    }
+
+    static UserDto map (UserEntity entity){
+        return null;
+    }
+
 }

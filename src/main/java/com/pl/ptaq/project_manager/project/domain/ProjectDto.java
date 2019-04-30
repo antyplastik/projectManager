@@ -1,5 +1,6 @@
 package com.pl.ptaq.project_manager.project.domain;
 
+import com.pl.ptaq.project_manager.user.domain.UserDto;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Setter
 @Getter
+@Data
 @Builder
 public class ProjectDto {
 
@@ -24,6 +26,6 @@ public class ProjectDto {
     private String projectDescription;
 
     @NotNull
-    private String adminLogin;
+    private UserDto adminLogin;
 
 }

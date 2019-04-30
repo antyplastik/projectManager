@@ -28,14 +28,13 @@ public class ProjectCrudFacadeTest {
         String projectName = "New project for tests";
         String teamId = "Cyganie";
         String projectDescription = "Test created for tests";
-        String adminLogin = "Paralizator123";
 
         projectDto = new ProjectDto().builder()
                 .projectCode(projectCode)
                 .projectName(projectName)
                 .teamId(teamId)
                 .projectDescription(projectDescription)
-                .adminLogin(adminLogin)
+                .adminLogin(null)
                 .build();
     }
 
@@ -99,7 +98,7 @@ public class ProjectCrudFacadeTest {
                 "modified/test",
                 "Eskimosi",
                 "Modified test description",
-                "KonRafal123"
+                null
                 )
         );
     }
