@@ -19,23 +19,23 @@ import java.util.UUID;
 @Data
 @Table(name = "Users")
 @Entity
-class UserEntity {
+public class UserEntity {
 
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
-    private UUID id;
+    private UUID userId;
 
     @NotNull
-    private String login;
+    private String userLogin;
 
     @NotNull
-    private String password;
+    private String userPassword;
 
     @Email
-    private String email;
+    private String userEmail;
 
     @NotNull
-    private String nick;
+    private String userNick;
 
 }

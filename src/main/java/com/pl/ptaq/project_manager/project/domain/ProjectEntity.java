@@ -1,12 +1,10 @@
 package com.pl.ptaq.project_manager.project.domain;
 
+import com.pl.ptaq.project_manager.user.domain.UserEntity;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
@@ -18,7 +16,7 @@ import java.util.UUID;
 @Data
 @Table(name = "Projects")
 @Entity
-class ProjectEntity {
+public class ProjectEntity {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -37,7 +35,8 @@ class ProjectEntity {
     @NotNull
     private String projectDescription;
 
-    @NotNull
-    private String adminLogin;
+    @OneToOne (fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private UserEntity adminLogin;
 
 }
