@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-interface UserRepository extends PagingAndSortingRepository<UserEntity, UUID> {
+public interface UserRepository extends PagingAndSortingRepository<UserEntity, UUID> {
 
-    UserEntity findByUserLogin(String login);
+    UserEntity findByLogin(String login);
 
 }

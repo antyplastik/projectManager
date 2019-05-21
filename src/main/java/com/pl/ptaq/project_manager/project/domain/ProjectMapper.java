@@ -1,6 +1,7 @@
 package com.pl.ptaq.project_manager.project.domain;
 
-import com.pl.ptaq.project_manager.user.domain.UserCrudService;
+import com.pl.ptaq.project_manager.team.TeamCrudInterface;
+import com.pl.ptaq.project_manager.user.domain.UserCrudInterface;
 
 class ProjectMapper {
 
@@ -9,9 +10,9 @@ class ProjectMapper {
             return new ProjectDto().builder()
                     .projectCode(entity.getProjectCode())
                     .projectName(entity.getProjectName())
-                    .teamId(entity.getTeamId())
+                    .team(TeamCrudInterface.map(entity.getTeam()))
                     .projectDescription(entity.getProjectDescription())
-                    .adminLogin(UserCrudService.map(entity.getAdminLogin()))
+                    .projectManager(UserCrudInterface.map(entity.getProjectManager()))
                     .build();
         return null;
     }
@@ -21,9 +22,9 @@ class ProjectMapper {
             return new ProjectEntity().builder()
                     .projectCode(projectDto.getProjectCode())
                     .projectName(projectDto.getProjectName())
-                    .teamId(projectDto.getTeamId())
+                    .team(TeamCrudInterface.map(projectDto.getTeam()))
                     .projectDescription(projectDto.getProjectDescription())
-                    .adminLogin(UserCrudService.map(projectDto.getAdminLogin()))
+                    .projectManager(UserCrudInterface.map(projectDto.getProjectManager()))
                     .build();
         return null;
     }

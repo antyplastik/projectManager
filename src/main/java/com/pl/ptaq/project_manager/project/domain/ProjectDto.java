@@ -1,5 +1,7 @@
 package com.pl.ptaq.project_manager.project.domain;
 
+import com.pl.ptaq.project_manager.team.TeamDto;
+import com.pl.ptaq.project_manager.team.TeamEntity;
 import com.pl.ptaq.project_manager.user.domain.UserDto;
 import lombok.*;
 
@@ -19,13 +21,13 @@ public class ProjectDto {
     @NotNull
     private String projectName;
 
-    @NotNull
-    private String teamId;
+
+    private TeamDto team;
 
     @NotNull
     private String projectDescription;
 
-    @NotNull
-    private UserDto adminLogin;
+
+    private UserDto projectManager;
 
 }

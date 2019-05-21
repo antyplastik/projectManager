@@ -1,6 +1,7 @@
 package com.pl.ptaq.project_manager.project.domain;
 
-import com.pl.ptaq.project_manager.user.domain.UserCrudService;
+import com.pl.ptaq.project_manager.team.TeamCrudInterface;
+import com.pl.ptaq.project_manager.user.domain.UserCrudInterface;
 import com.pl.ptaq.project_manager.user.domain.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,55 +10,74 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ProjectCrudService implements ProjectCrudFacade {
+public class ProjectCrudService implements ProjectCrudInterface {
 
-    private final ProjectRepository repository;
+    private ProjectRepository projectRepository;
+
+    private UserCrudInterface userCrudFacade;
 
     @Autowired
-    public ProjectCrudService(ProjectRepository repository) {
-        this.repository = repository;
+    public ProjectCrudService(ProjectRepository projectRepository, UserCrudInterface userCrudFacade) {
+        this.projectRepository = projectRepository;
+        this.userCrudFacade = userCrudFacade;
     }
 
     @Override
-    public boolean addProject(String projectCode, String projectName, String teamId, String projectDescription, UserDto adminLogin) {
-        ProjectEntity project;
-        if (!isProjectExist(projectCode, projectName)) {
-            project = new ProjectEntity().builder()
-                    .projectCode(projectCode)
-                    .projectName(projectName)
-                    .teamId(teamId)
-                    .projectDescription(projectDescription)
-                    .adminLogin(UserCrudService.map(adminLogin))
+    public boolean addProject(ProjectDto projectDto, UserDto adminLogin) {
+        ProjectEntity entity;
+        if (!isProjectExist(projectDto)) {
+            entity = new ProjectEntity().builder()
+                    .projectCode(projectDto.getProjectCode())
+                    .projectName(projectDto.getProjectName())
+                    .team(TeamCrudInterface.map(projectDto.getTeam()))
+                    .projectDescription(projectDto.getProjectDescription())
+                    .projectManager(UserCrudInterface.map(adminLogin))
                     .build();
 
-            repository.save(project);
-
-            return isProjectExist(project.getProjectCode(), project.getProjectName());
+            return projectRepository.save(entity) != null;
         }
         return false;
     }
 
-    private ProjectEntity findProjectEntityByCode(String projectCode) {
-        return repository.findByProjectCode(projectCode);
+    private ProjectEntity findProjectEntityByCode(ProjectDto projectDto) {
+        return projectRepository.findByProjectCode(projectDto.getProjectCode());
     }
 
-    private ProjectEntity findProjectEntityByName(String projectName) {
-        return repository.findByProjectName(projectName);
+    private ProjectEntity findProjectEntityByName(ProjectDto projectDto) {
+        return projectRepository.findByProjectName(projectDto.getProjectName());
     }
 
-    private ProjectEntity findProjectEntity(String projectCode, String projectName) {
-        if (projectCode != null)
-            return findProjectEntityByCode(projectCode);
+    private ProjectEntity findProjectEntity(ProjectDto dto) {
+        if (dto.getProjectCode() != null)
+            return findProjectEntityByCode(dto);
         else
-            return findProjectEntityByName(projectName);
+            return findProjectEntityByName(dto);
     }
 
     @Override
-    public ProjectDto findProject(String projectCode, String projectName) {
-        if (projectCode != null)
-            return ProjectMapper.map(findProjectEntityByCode(projectCode));
+    public ProjectDto findProject(ProjectDto projectDto) {
+        if (projectDto.getProjectCode() != null)
+            return ProjectMapper.map(findProjectEntityByCode(projectDto));
         else
-            return ProjectMapper.map(findProjectEntityByName(projectName));
+            return ProjectMapper.map(findProjectEntityByName(projectDto));
+    }
+
+    @Override
+    public List<ProjectDto> findProjects(ProjectDto projectDto) {
+        List<ProjectDto> resultList = new ArrayList<ProjectDto>();
+
+        if (projectDto.getTeam() != null)
+            resultList = addToResultList(resultList, projectRepository.findAllByTeam(TeamCrudInterface.map(projectDto.getTeam())));
+
+        if (projectDto.getProjectDescription() != null)
+            resultList = addToResultList(resultList,
+                    projectRepository.findAllByProjectDescriptionLike(projectDto.getProjectDescription()));
+
+        if (projectDto.getProjectName() != null)
+            resultList = addToResultList(resultList,
+                    projectRepository.findAllByProjectNameLike(projectDto.getProjectName()));
+
+        return resultList;
     }
 
     private List<ProjectDto> addToResultList(List<ProjectDto> resultList, List<ProjectEntity> input) {
@@ -68,75 +88,57 @@ public class ProjectCrudService implements ProjectCrudFacade {
     }
 
     @Override
-    public List<ProjectDto> findProjects(String teamId, String projectName, String projectDescription) {
-        List<ProjectDto> resultList = new ArrayList<ProjectDto>();
+    public boolean isProjectExist(ProjectDto projectDto) {
+        String projectCode = projectDto.getProjectCode();
+        String projectName = projectDto.getProjectName();
 
-        if (teamId != null)
-            resultList = addToResultList(resultList, repository.findAllByTeamId(teamId));
-
-        if (projectDescription != null)
-            resultList = addToResultList(resultList,
-                    repository.findAllByProjectDescriptionLike(projectDescription));
-
-        if (projectName != null)
-            resultList = addToResultList(resultList,
-                    repository.findAllByProjectNameLike(projectName));
-
-        return resultList;
-    }
-
-    @Override
-    public boolean isProjectExist(String projectCode, String projectName) {
         if (projectCode != null || projectName != null) {
-            return findProject(projectCode, projectName) != null;
+            return findProject(projectDto) != null;
         }
         return false;
     }
 
     @Override
-    public boolean updateProject(String projectCode, String projectName, String teamId, String projectDescription, UserDto adminLogin) {
-        ProjectEntity found = findProjectEntity(projectCode, projectName);
+    public boolean updateProject(ProjectDto newProjectDto, ProjectDto oldProjectDto, UserDto userDto) {
+        String projectCode = newProjectDto.getProjectCode();
+        String projectName = newProjectDto.getProjectName();
+        String projectDescription = newProjectDto.getProjectDescription();
+        ProjectEntity found = findProjectEntity(oldProjectDto);
 
         if (found != null) {
             ProjectEntity modified = new ProjectEntity();
-            modified.setProjectId(found.getProjectId());
+
 
             if (projectCode != null)
                 modified.setProjectCode(projectCode);
             if (projectName != null)
                 modified.setProjectName(projectName);
-            if (teamId != null)
-                modified.setTeamId(teamId);
             if (projectDescription != null)
                 modified.setProjectDescription(projectDescription);
-            if (adminLogin != null)
-                modified.setAdminLogin(UserCrudService.map(adminLogin));
 
-            if  (modified.hashCode() != found.hashCode()){
-                repository.save(modified);
-                return true;
-            }
+            if (modified.hashCode() != found.hashCode())
+                return projectRepository.save(modified) != null;
         }
         return false;
     }
 
     @Override
-    public boolean deleteProject(String projectCode) {
-        ProjectEntity found = findProjectEntityByCode(projectCode);
+    public boolean deleteProject(ProjectDto projectDto) {
+        ProjectEntity found = findProjectEntityByCode(projectDto);
         if (found != null) {
-            repository.delete(found);
-            return !isProjectExist(found.getProjectCode(), found.getProjectName());
+            projectRepository.delete(found);
+            return true;
         }
         return false;
     }
 
 
-    public ProjectDto map(ProjectEntity entity) {
+    public static ProjectDto map(ProjectEntity entity) {
         return ProjectMapper.map(entity);
     }
 
 
-    public ProjectEntity map(ProjectDto dto) {
+    public static ProjectEntity map(ProjectDto dto) {
         return ProjectMapper.map(dto);
     }
 }

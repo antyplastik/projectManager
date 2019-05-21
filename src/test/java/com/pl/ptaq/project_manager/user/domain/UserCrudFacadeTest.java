@@ -16,7 +16,7 @@ public class UserCrudFacadeTest {
     @Autowired
     UserRepository userRepository;
 
-    private UserCrudFacade userService;
+    private UserCrudInterface userService;
     private UserDto userDto;
 
     @Before

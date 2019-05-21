@@ -3,8 +3,11 @@ package com.pl.ptaq.project_manager.user.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
-public class UserCrudService implements UserCrudFacade {
+public class UserCrudService implements UserCrudInterface {
 
     private final UserRepository repository;
 
@@ -15,10 +18,10 @@ public class UserCrudService implements UserCrudFacade {
 
     private UserEntity createOrModifyUserEntity(String login, String password, String email, String nick) {
         return new UserEntity().builder()
-                .userLogin(login)
-                .userPassword(password)
-                .userEmail(email)
-                .userNick(nick)
+                .login(login)
+                .password(password)
+                .email(email)
+                .nickname(nick)
                 .build();
     }
 
@@ -30,13 +33,13 @@ public class UserCrudService implements UserCrudFacade {
 
             repository.save(user);
 
-            return isUserExist(user.getUserLogin());
+            return isUserExist(user.getLogin());
         }
         return false;
     }
 
     private UserEntity findUserEntity(String login) {
-        return repository.findByUserLogin(login);
+        return repository.findByLogin(login);
     }
 
     @Override
@@ -54,10 +57,10 @@ public class UserCrudService implements UserCrudFacade {
         UserEntity found = findUserEntity(login);
         if (found != null) {
             UserEntity modified = createOrModifyUserEntity(
-                    found.getUserLogin(),
-                    found.getUserPassword(),
-                    found.getUserEmail(),
-                    found.getUserNick()
+                    found.getLogin(),
+                    found.getPassword(),
+                    found.getEmail(),
+                    found.getNickname()
             );
 
             if (modified.hashCode() != found.hashCode()){
@@ -73,16 +76,28 @@ public class UserCrudService implements UserCrudFacade {
         UserEntity found = findUserEntity(login);
         if (found != null) {
             repository.delete(found);
-            return !isUserExist(found.getUserLogin());
+            return !isUserExist(found.getLogin());
         }
         return false;
+    }
+
+    public static UserDto map (UserEntity entity){
+        return UserMapper.map(entity);
     }
 
     public static UserEntity map(UserDto dto) {
         return UserMapper.map(dto);
     }
 
-    public static UserDto map (UserEntity entity){
-        return UserMapper.map(entity);
+    static List<UserDto> mapDtoList(List<UserEntity> entities){
+        return entities.stream()
+                .map(entity -> map(entity))
+                .collect(Collectors.toList());
+    }
+
+    static List<UserEntity> mapEntityList(List<UserDto> dtos){
+        return dtos.stream()
+                .map(dto->map(dto))
+                .collect(Collectors.toList());
     }
 }
