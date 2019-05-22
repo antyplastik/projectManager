@@ -1,6 +1,7 @@
 package com.pl.ptaq.project_manager.user.domain;
 
 import com.pl.ptaq.project_manager.project.domain.ProjectEntity;
+import com.pl.ptaq.project_manager.task.domain.TaskEntity;
 import com.pl.ptaq.project_manager.team.TeamEntity;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -48,4 +49,7 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<TeamEntity> teams;
+
+    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<TaskEntity> tasks;
 }

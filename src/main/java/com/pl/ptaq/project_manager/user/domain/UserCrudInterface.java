@@ -4,15 +4,15 @@ import java.util.List;
 
 public interface UserCrudInterface {
 
-    boolean addUser(String login, String password, String email, String nick);
+    boolean createUser(UserDto user);
 
-    UserDto findUser(String login);
+    UserDto readUser(UserDto user);
 
-    boolean isUserExist(String login);
+    boolean isUserExist(UserDto user);
 
-    boolean updateUser(String login, String password, String email, String nick);
+    boolean updateUser(UserDto newUser, UserDto oldUser);
 
-    boolean deleteUser(String login);
+    boolean deleteUser(UserDto user);
 
     static UserDto map (UserEntity entity){
         return UserMapper.map(entity);

@@ -32,63 +32,58 @@ public class UserCrudFacadeTest {
                 .login(login)
                 .password(password)
                 .email(email)
-                .nick(nick)
+                .nickname(nick)
                 .build();
     }
 
     @Test
     public void WHEN_add_new_user_and_after_add_user_exist_THEN_true() {
-        assertTrue(userService.addUser(
-                userDto.getLogin(),
-                userDto.getPassword(),
-                userDto.getEmail(),
-                userDto.getNick()
-                )
+        assertTrue(userService.createUser(userDto)
         );
     }
 
     @Test
     public void WHEN_add_new_user_that_already_exist_THEN_false() {
         userRepository.save(UserMapper.map(userDto));
-        assertFalse(userService.addUser(
-                userDto.getLogin(),
-                userDto.getPassword(),
-                userDto.getEmail(),
-                userDto.getNick()
-                )
-        );
+        assertFalse(userService.createUser(userDto));
     }
 
     @Test
     public void WHEN_found_exist_user_THEN_return_user() {
         userRepository.save(UserMapper.map(userDto));
-        assertNotNull(userService.findUser(userDto.getLogin()));
+        assertNotNull(userService.readUser(userDto));
     }
 
     @Test
     public void WHEN_user_exist_THEN_return_true() {
         userRepository.save(UserMapper.map(userDto));
-        assertTrue(userService.isUserExist(userDto.getLogin()));
+        assertTrue(userService.isUserExist(userDto));
     }
 
     @Test
     public void WHEN_update_user_found_and_modified_entities_are_not_the_same_THEN_true() {
         userRepository.save(UserMapper.map(userDto));
-        assertTrue(userService.updateUser(userDto.getLogin(),
-                "changed",
-                "changed@test.com.pl",
-                "changedNick"));
+
+        UserDto modified = new UserDto().builder()
+                .login("modified")
+                .password("321mod123")
+                .email("modified@mod.com")
+                .nickname("mod")
+                .userType(UserType.SCRUM_MASTER)
+                .build();
+
+        assertTrue(userService.updateUser(modified, userDto));
 
     }
 
     @Test
     public void WHEN_delete_exist_user_THEN_true() {
         userRepository.save(UserMapper.map(userDto));
-        assertTrue(userService.deleteUser(userDto.getLogin()));
+        assertTrue(userService.deleteUser(userDto));
     }
 
     @Test
     public void WHEN_delete_user_that_not_exist_THEN_false() {
-        assertFalse(userService.deleteUser(userDto.getLogin()));
+        assertFalse(userService.deleteUser(userDto));
     }
 }

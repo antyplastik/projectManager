@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,72 +17,84 @@ public class UserCrudService implements UserCrudInterface {
         this.repository = repository;
     }
 
-    private UserEntity createOrModifyUserEntity(String login, String password, String email, String nick) {
+    private UserEntity createNewUserEntity(UserDto user) {
         return new UserEntity().builder()
-                .login(login)
-                .password(password)
-                .email(email)
-                .nickname(nick)
+                .login(user.getLogin())
+                .password(user.getPassword())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
                 .build();
     }
 
     @Override
-    public boolean addUser(String login, String password, String email, String nick) {
-        UserEntity user;
-        if (!isUserExist(login)) {
-            user = createOrModifyUserEntity(login, password, email, nick);
+    public boolean createUser(UserDto user) {
+        UserEntity userEntity;
+        if (!isUserExist(user)) {
+            userEntity = createNewUserEntity(user);
 
-            repository.save(user);
-
-            return isUserExist(user.getLogin());
+            return repository.save(userEntity) != null;
         }
         return false;
     }
 
-    private UserEntity findUserEntity(String login) {
-        return repository.findByLogin(login);
+    private UserEntity findUserEntity(UserDto user) {
+        Optional<UserEntity> found = repository.findByLogin(user.getLogin());
+        return found.isPresent() ? found.get() : null;
     }
 
     @Override
-    public UserDto findUser(String login) {
-        return UserMapper.map(findUserEntity(login));
+    public UserDto readUser(UserDto user) {
+        return UserMapper.map(findUserEntity(user));
     }
 
     @Override
-    public boolean isUserExist(String login) {
-        return findUser(login) != null;
+    public boolean isUserExist(UserDto user) {
+        return readUser(user) != null;
     }
 
     @Override
-    public boolean updateUser(String login, String password, String email, String nick) {
-        UserEntity found = findUserEntity(login);
+    public boolean updateUser(UserDto newUser, UserDto oldUser) {
+        UserEntity found = findUserEntity(oldUser);
         if (found != null) {
-            UserEntity modified = createOrModifyUserEntity(
-                    found.getLogin(),
-                    found.getPassword(),
-                    found.getEmail(),
-                    found.getNickname()
-            );
 
-            if (modified.hashCode() != found.hashCode()){
-                repository.save(modified);
-                return true;
-            }
+            String[] updates = {
+                    newUser.getLogin(),
+                    newUser.getPassword(),
+                    newUser.getEmail(),
+                    newUser.getNickname(),
+            };
+
+            if (updates[0] != null)
+                found.setLogin(updates[0]);
+            if(updates[1] != null)
+                found.setPassword(updates[1]);
+            if(updates[2] != null)
+                found.setEmail(updates[2]);
+            if(updates[3] != null)
+                found.setNickname(updates[3]);
+
+            if(newUser.getUserType() != null)
+                found.setUserType(newUser.getUserType());
+
+                if (updates != null) {
+                    repository.save(found);
+                    return true;
+                }
         }
         return false;
     }
 
     @Override
-    public boolean deleteUser(String login) {
-        UserEntity found = findUserEntity(login);
+    public boolean deleteUser(UserDto user) {
+        UserEntity found = findUserEntity(user);
         if (found != null) {
             repository.delete(found);
-            return !isUserExist(found.getLogin());
+            return true;
         }
         return false;
     }
 
-    public static UserDto map (UserEntity entity){
+    public static UserDto map(UserEntity entity) {
         return UserMapper.map(entity);
     }
 
@@ -89,15 +102,15 @@ public class UserCrudService implements UserCrudInterface {
         return UserMapper.map(dto);
     }
 
-    static List<UserDto> mapDtoList(List<UserEntity> entities){
+    static List<UserDto> mapDtoList(List<UserEntity> entities) {
         return entities.stream()
                 .map(entity -> map(entity))
                 .collect(Collectors.toList());
     }
 
-    static List<UserEntity> mapEntityList(List<UserDto> dtos){
+    static List<UserEntity> mapEntityList(List<UserDto> dtos) {
         return dtos.stream()
-                .map(dto->map(dto))
+                .map(dto -> map(dto))
                 .collect(Collectors.toList());
     }
 }

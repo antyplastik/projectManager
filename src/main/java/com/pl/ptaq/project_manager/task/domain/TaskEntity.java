@@ -37,11 +37,8 @@ public class TaskEntity {
     @NotNull
     private String topic;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<UserEntity> users;
-
-    @OneToMany(mappedBy = "task", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.PERSIST)
-    private List<ToDoListEntity> toDoList;
 
     private String description;
 
@@ -59,4 +56,7 @@ public class TaskEntity {
 
     @Column(columnDefinition = "boolean default false", nullable = false)
     private boolean isDone;
+
+    @OneToMany(mappedBy = "task", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<ToDoListEntity> toDoList;
 }

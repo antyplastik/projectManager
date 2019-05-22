@@ -11,19 +11,21 @@ class UserMapper {
                 .login(entity.getLogin())
                 .password(entity.getPassword())
                 .email(entity.getEmail())
-                .nick(entity.getNickname())
+                .nickname(entity.getNickname())
+                .userType(entity.getUserType())
                 .build();
         else
             return null;
     }
 
-    public static UserEntity map(UserDto userDto) {
-        if (userDto != null)
+    public static UserEntity map(UserDto dto) {
+        if (dto != null)
         return new UserEntity().builder()
-                .login(userDto.getLogin())
-                .password(userDto.getPassword())
-                .email(userDto.getEmail())
-                .nickname(userDto.getNick())
+                .login(dto.getLogin())
+                .password(dto.getPassword())
+                .email(dto.getEmail())
+                .nickname(dto.getNickname())
+                .userType(dto.getUserType())
                 .build();
         else
             return null;

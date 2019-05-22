@@ -24,5 +24,7 @@ public class UserDto {
     private String email;
 
     @NotNull
-    private String nick;
+    private String nickname;
+
+    private UserType userType;
 }

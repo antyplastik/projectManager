@@ -1,27 +1,29 @@
 package com.pl.ptaq.project_manager.user;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.pl.ptaq.project_manager.user.domain.UserCrudInterface;
+import com.pl.ptaq.project_manager.user.domain.UserDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/user")
 class RestUserController {
 
-//    @Autowired
-//    private UserCrudService userService;
+    @Autowired
+    private UserCrudInterface userService;
 
-    @GetMapping("/user")
-    public String user(Model model) {
-        model.addAttribute("atrybut","1234");
-
-        return "user";
+    @PostMapping("/add")
+    @ResponseStatus(HttpStatus.FOUND)
+    public boolean user(UserDto dto) {
+        return userService.createUser(dto);
     }
 
-    @GetMapping("/user/details/{user}")
-    public String userDetails(@RequestParam String user){
+    @PostMapping("/find")
+    public UserDto findUser(@RequestParam String login){
 
-        return null;
+        return userService.readUser(new UserDto().builder()
+                .login(login)
+                .build());
     }
 }
